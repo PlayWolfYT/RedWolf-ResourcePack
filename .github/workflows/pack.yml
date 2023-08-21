@@ -19,7 +19,7 @@ jobs:
 
       - name: Generate SHA-1
         run: |
-          sha1sum RedWolf.zip > RedWolf.zip.sha1
+          sha1sum RedWolf.zip | head -c 40 > RedWolf.zip.sha1
 
       - name: Create release
         id: create_release
