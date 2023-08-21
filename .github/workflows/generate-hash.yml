@@ -2,7 +2,7 @@ name: Generate Hashes
 
 on:
   release:
-    types: [published]
+    types: [edited, published]
 
 jobs:
   build:
