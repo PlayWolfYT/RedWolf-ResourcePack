@@ -1,0 +1,26 @@
+name: Create and Upload RedWolf Pack
+
+on:
+  push:
+    branches:
+      - main  # Change to your desired branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Zip files
+      run: |
+        zip -r RedWolf-Pack.zip .  # Replace with your directory path if needed
+
+    - name: Upload to GitHub Releases
+      uses: actions/upload-release-assets@v1
+      with:
+        asset_path: ./RedWolf-Pack.zip
+        asset_name: RedWolf-Pack.zip
+        tag_name: ${{ github.sha }}  # You can customize the tag name
+        release_url: ${{ github.event.repository.url }}/releases
