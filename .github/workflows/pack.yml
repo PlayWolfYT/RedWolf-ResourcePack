@@ -17,6 +17,10 @@ jobs:
         run: |
           zip -r RedWolf.zip .
 
+      - name: Generate SHA-1
+        run: |
+          sha1sum RedWolf.zip > RedWolf.zip.sha1
+
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
@@ -25,11 +29,10 @@ jobs:
         with:
           tag_name: v${{ github.run_number }}
           release_name: Release v${{ github.run_number }}
-          draft: true
+          draft: false
           prerelease: false
 
       - name: Upload zip file to release
-        id: upload_asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -39,9 +42,12 @@ jobs:
           asset_name: RedWolf.zip
           asset_content_type: application/zip
 
-      - name: Change release to published
-        uses: irongut/EditRelease@v1.2.0
+      - name: Upload SHA-1
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          id: ${{ steps.create_release.outputs.id }}
-          draft: false
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./RedWolf.zip.sha1
+          asset_name: RedWolf.zip.sha1
+          asset_content_type: text/plain
