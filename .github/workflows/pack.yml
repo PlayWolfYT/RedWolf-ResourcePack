@@ -1,26 +1,40 @@
-name: Create and Upload RedWolf Pack
+name: Create Release with Zip File
 
 on:
   push:
     branches:
-      - main  # Change to your desired branch
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Zip files
-      run: |
-        zip -r RedWolf-Pack.zip .  # Replace with your directory path if needed
+      - name: Zip repository contents
+        run: |
+          zip -r RedWolf.zip .
 
-    - name: Upload to GitHub Releases
-      uses: actions/upload-release-assets@v1
-      with:
-        asset_path: ./RedWolf-Pack.zip
-        asset_name: RedWolf-Pack.zip
-        tag_name: ${{ github.sha }}  # You can customize the tag name
-        release_url: ${{ github.event.repository.url }}/releases
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
+          draft: false
+          prerelease: false
+
+      - name: Upload zip file to release
+        id: upload_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./RedWolf.zip
+          asset_name: RedWolf.zip
+          asset_content_type: application/zip
