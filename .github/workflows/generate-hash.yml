@@ -1,4 +1,4 @@
-name: Create Release with Zip File
+name: Generate Hashes
 
 on:
   release:
