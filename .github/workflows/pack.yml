@@ -15,7 +15,7 @@ jobs:
 
       - name: Zip repository contents
         run: |
-          zip -r RedWolf.zip .
+          zip -r RedWolf.zip . -x .git/\* -x .github/\*
 
       - name: Generate SHA-1
         run: |
